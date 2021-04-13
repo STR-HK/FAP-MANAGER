@@ -3,7 +3,7 @@ from PyQt5.QtCore import QDateTime, Qt, QTimer, QSize, QTextStream, QFile, QUrl
 from PyQt5.QtWidgets import (QApplication, QBoxLayout, QCheckBox, QComboBox, QDateTimeEdit,
         QDial, QDialog, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
         QProgressBar, QPushButton, QRadioButton, QScrollBar, QSizePolicy,
-        QSlider, QSpinBox, QStyleFactory, QTableWidget, QTabWidget, QTextEdit,
+        QSlider, QSpinBox, QStyleFactory, QTableWidget, QTabWidget, QTextEdit, QToolBar,
         QVBoxLayout, QWidget, QMessageBox, QStackedWidget, QStatusBar, QDesktopWidget,
         QMainWindow, QMenuBar, QAction, QMenu, QListWidget, QListWidgetItem, QInputDialog,
         QFileDialog, QTableWidgetItem, QHeaderView, QShortcut, QListWidget, QStyle)
@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
         self.tasks.addSeparator()
         self.addItemAction = QAction(QIcon('./Icons/add.svg'), 'Add Item...', self)
         self.addItemAction.setShortcut('Ctrl+A')
-        self.addItemAction.triggered.connect(self.addTask)
+        self.addItemAction.triggered.connect(self.addItem)
         self.tasks.addAction(self.addItemAction)
         self.addItemFromFolderAction = QAction(QIcon('./Icons/create_new_folder.svg'), 'Add all Items in Folder...', self)
         self.tasks.addAction(self.addItemFromFolderAction)
@@ -172,6 +172,21 @@ class MainWindow(QMainWindow):
         self.exitAction.setShortcut('Ctrl+W')
         self.exitAction.triggered.connect(app.quit)
         self.tasks.addAction(self.exitAction)
+
+
+
+        # 툴바 시작
+        self.toolIcon = QAction(QIcon('./Icons/construction.svg'), 'Tool', self)
+        self.toolIcon.setEnabled(False)
+
+        self.toolbar = QToolBar('example')
+        self.toolbar.addAction(self.toolIcon)
+        self.toolbar.addAction(self.addItemAction)
+        self.toolbar.setMovable(False)
+        self.addToolBar(Qt.TopToolBarArea, self.toolbar)
+        
+
+        # 툴바 끝
         
         self.tools = self.menubar.addMenu('&Tools')
         self.hideIconAction = QAction(QIcon('./Icons/hide_image.svg'), 'Hide List Images', self)
@@ -181,28 +196,26 @@ class MainWindow(QMainWindow):
         self.showIconAction.setShortcut('Ctrl+H')
         self.showIconAction.triggered.connect(self.hideIcon)
         self.tools.addAction(self.hideIconAction)
-        self.gong = QAction(QIcon('./Icons/description.svg'), 'Gong', self)
-        self.tools.addAction(self.gong)
 
         self.options = self.menubar.addMenu('&Options')
         self.help = self.menubar.addMenu('&Help')
 
         self.statusbar = self.statusBar()
-        self.statusbutton = QPushButton('Footer')
-        self.statusbutton.setStyleSheet("width: 100%;")
+        self.statusbutton = QPushButton('Footer QPushButton That Works')
         self.statusbar.addWidget(self.statusbutton)
         self.setStatusBar(self.statusbar)
 
         # List
         #Create widget
-
+        self.MyIconSize = QSize(80, 55)
 
         self.layoutlist = QListWidget(self)
-        self.layoutlist.setIconSize(QSize(80, 45))
+        self.layoutlist.setIconSize(self.MyIconSize)
         self.layoutlist.setStyleSheet("""
             QListWidget { show-decoration-selected: 0; padding: 0; margin: 0; outline: 0; margin: 0; }
             QListWidget::item:hover { background: #ffebeb; color: black; }
-            QListWidget::item:selected { background: #FFC0BD; border: none; color: black; }
+            QListWidget::item:selected { background: #FFC0BD; color: black; }
+            QListWidget::item { border-bottom: 1px solid lightgray; }"
         """)
 
         self.loader()
@@ -214,7 +227,7 @@ class MainWindow(QMainWindow):
             self.tools.insertAction(self.hideIconAction, self.showIconAction)
             self.tools.removeAction(self.hideIconAction)
         else:
-            self.layoutlist.setIconSize(QSize(80, 45))
+            self.layoutlist.setIconSize(self.MyIconSize)
             self.imgHide = 0
             self.tools.insertAction(self.showIconAction, self.hideIconAction)
             self.tools.removeAction(self.showIconAction)
@@ -245,17 +258,20 @@ class MainWindow(QMainWindow):
             widgetLine2 = QHBoxLayout()
             widgetLine2.setAlignment(Qt.AlignRight | Qt.AlignBottom)
 
-            # widgetButton1 = QPushButton("A")
-            # widgetButton1.setStyleSheet("background-color: transparent")
-            # widgetLine1.addWidget(widgetButton1)
+            widgetButton1 = QPushButton()
+            widgetButton1.setIcon(QIcon('./Icons/exit_to_app.svg'))
+            widgetButton1.setStyleSheet("background-color: transparent")
+            widgetLine1.addWidget(widgetButton1)
 
-            # widgetButton2 = QPushButton("B")
-            # widgetButton2.setStyleSheet("background-color: transparent")
-            # widgetLine1.addWidget(widgetButton2)
+            widgetButton2 = QPushButton()
+            widgetButton2.setIcon(QIcon('./Icons/construction.svg'))
+            widgetButton2.setStyleSheet("background-color: transparent")
+            widgetLine2.addWidget(widgetButton2)
 
-            # widgetButton3 = QPushButton("C")
-            # widgetButton3.setStyleSheet("background-color: transparent")
-            # widgetLine1.addWidget(widgetButton3)
+            widgetButton3 = QPushButton()
+            widgetButton3.setIcon(QIcon('./Icons/movie.svg'))
+            widgetButton3.setStyleSheet("background-color: transparent")
+            widgetLine2.addWidget(widgetButton3)
 
             captureThumbnailButton = QPushButton()
             captureThumbnailButton.setStyleSheet("""
@@ -316,8 +332,9 @@ class MainWindow(QMainWindow):
         self.saveData()
         self.loader()
 
-    def addTask(self):
+    def addItem(self):
         self.load = QFileDialog()
+        self.load.setWindowIcon(QIcon('./Icons/movie.svg'))
         self.load.setFileMode(QFileDialog.AnyFile)
         self.loadfilename = self.load.getOpenFileName(
             caption='Open Video file', filter="Video files (*.mp4 *.mkv)")
