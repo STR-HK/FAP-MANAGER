@@ -33,7 +33,6 @@ class VideoPlayer(QWidget):
         videoWidget = QVideoWidget()
 
         # self.abrir()
-
         openButton = QPushButton("Open Video")   
         openButton.setToolTip("Open Video File")
         openButton.setStatusTip("Open Video File")
@@ -162,18 +161,18 @@ class MainWindow(QMainWindow):
         self.tasks.addAction(self.saveAction)
         self.tasks.addSeparator()
         self.addItemAction = QAction(QIcon('./Icons/add.svg'), 'Add Item...', self)
-        self.addItemAction.setShortcut('Ctrl+A')
+        self.addItemAction.setShortcut('Ctrl+P')
         self.addItemAction.triggered.connect(self.addItem)
         self.tasks.addAction(self.addItemAction)
-        self.addItemFromFolderAction = QAction(QIcon('./Icons/create_new_folder.svg'), 'Add all Items in Folder...', self)
+        self.addItemFromFolderAction = QAction(QIcon('./Icons/playlist_add.svg'), 'Add all Items in Folder...', self)
         self.tasks.addAction(self.addItemFromFolderAction)
+        self.addFolderAction = QAction(QIcon('./Icons/create_new_folder.svg'), 'Add Folder and With Inner Items...', self)
+        self.tasks.addAction(self.addFolderAction)
         self.tasks.addSeparator()
         self.exitAction = QAction(QIcon('./Icons/exit_to_app.svg'), 'Exit', self)
         self.exitAction.setShortcut('Ctrl+W')
         self.exitAction.triggered.connect(app.quit)
         self.tasks.addAction(self.exitAction)
-
-
 
         # 툴바 시작
         self.toolIcon = QAction(QIcon('./Icons/construction.svg'), 'Tool', self)
@@ -184,8 +183,6 @@ class MainWindow(QMainWindow):
         self.toolbar.addAction(self.addItemAction)
         self.toolbar.setMovable(False)
         self.addToolBar(Qt.TopToolBarArea, self.toolbar)
-        
-
         # 툴바 끝
         
         self.tools = self.menubar.addMenu('&Tools')
@@ -198,7 +195,12 @@ class MainWindow(QMainWindow):
         self.tools.addAction(self.hideIconAction)
 
         self.options = self.menubar.addMenu('&Options')
+        self.openPreferencesAction = QAction(QIcon('./Icons/settings.svg'), 'Preferences', self)
+        self.options.addAction(self.openPreferencesAction)
+
         self.help = self.menubar.addMenu('&Help')
+        self.aboutAction = QAction(QIcon('./Icons/info.svg'), 'Information', self)
+        self.help.addAction(self.aboutAction)
 
         self.statusbar = self.statusBar()
         self.statusbutton = QPushButton('Footer QPushButton That Works')
@@ -258,20 +260,20 @@ class MainWindow(QMainWindow):
             widgetLine2 = QHBoxLayout()
             widgetLine2.setAlignment(Qt.AlignRight | Qt.AlignBottom)
 
-            widgetButton1 = QPushButton()
-            widgetButton1.setIcon(QIcon('./Icons/exit_to_app.svg'))
-            widgetButton1.setStyleSheet("background-color: transparent")
-            widgetLine1.addWidget(widgetButton1)
+            # widgetButton1 = QPushButton()
+            # widgetButton1.setIcon(QIcon('./Icons/exit_to_app.svg'))
+            # widgetButton1.setStyleSheet("background-color: transparent")
+            # widgetLine2.addWidget(widgetButton1)
 
-            widgetButton2 = QPushButton()
-            widgetButton2.setIcon(QIcon('./Icons/construction.svg'))
-            widgetButton2.setStyleSheet("background-color: transparent")
-            widgetLine2.addWidget(widgetButton2)
+            # widgetButton2 = QPushButton()
+            # widgetButton2.setIcon(QIcon('./Icons/construction.svg'))
+            # widgetButton2.setStyleSheet("background-color: transparent")
+            # widgetLine2.addWidget(widgetButton2)
 
-            widgetButton3 = QPushButton()
-            widgetButton3.setIcon(QIcon('./Icons/movie.svg'))
-            widgetButton3.setStyleSheet("background-color: transparent")
-            widgetLine2.addWidget(widgetButton3)
+            editButton = QPushButton()
+            editButton.setIcon(QIcon('./Icons/edit.svg'))
+            editButton.setStyleSheet("background-color: transparent")
+            widgetLine1.addWidget(editButton)
 
             captureThumbnailButton = QPushButton()
             captureThumbnailButton.setStyleSheet("""
