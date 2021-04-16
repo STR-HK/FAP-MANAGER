@@ -14,7 +14,7 @@ from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 
 from PyQt5 import QtCore
-
+import os
 import json
 
 class VideoPlayer(QWidget):
@@ -126,12 +126,16 @@ class MainWindow(QMainWindow):
 
         self.imgHide = 0
 
-        try:
+        if os.path.exists('data.ini') == False:
+            print('Not Exist')
             f = open("data.ini", "x")
             f.write("{}")
             f.close()
-        except:
-            print('exist')
+
+        # try:
+            
+        # except:
+        #     print('exist')
 
         self.data = open('data.ini','r')
         self.data = json.loads(self.data.read())
@@ -325,11 +329,11 @@ class MainWindow(QMainWindow):
         if self.askDialog(QMessageBox.Warning,'./Icons/delete.svg', 'Item Remover', 'Are You Sure to Remove this Item?') == False:
             return
         keylist = []
-        self.valulist = []
+        valulist = []
         for key in self.data.keys():
             keylist.append(key)
         for valu in self.data.items():
-            self.valulist.append(valu)
+            valulist.append(valu)
         del self.data[keylist[int(value)]]
         self.saveData()
         self.loader()
@@ -381,7 +385,10 @@ class MainWindow(QMainWindow):
             return False
 
     def thumbNail(self, value):
-        self.valu = value
+        valulist = []
+        for valu in self.data.items():
+            valulist.append(valu)
+        global glist ; valulist
         
         self.w = VideoPlayer()
         self.w.show()
